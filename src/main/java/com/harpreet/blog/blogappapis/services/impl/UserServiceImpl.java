@@ -5,6 +5,7 @@ import com.harpreet.blog.blogappapis.exceptions.ResourceNotFoundException;
 import com.harpreet.blog.blogappapis.payloads.UserDto;
 import com.harpreet.blog.blogappapis.repositories.UserRepo;
 import com.harpreet.blog.blogappapis.services.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ public class UserServiceImpl implements UserService {
 //    We haven't added @Service in the UserRepo because we haven't written the implementation of the interface
 //    We were using directly the properties of JPA Repository
 //    As we get the object of implementation class only.
+    @Autowired
+    private ModelMapper modelMapper;
     @Override
     public UserDto createUser(UserDto userDto) {
         User user = this.dtoToUser(userDto);
@@ -60,22 +63,25 @@ public class UserServiceImpl implements UserService {
     }
 
     private User dtoToUser(UserDto userDto){
-        User user = new User();
-        user.setId(userDto.getId());
-        user.setName(userDto.getName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
-        user.setAbout(userDto.getAbout());
+        User user = this.modelMapper.map(userDto,User.class);
+//        User user = new User();
+//        user.setId(userDto.getId());
+//        user.setName(userDto.getName());
+//        user.setEmail(userDto.getEmail());
+//        user.setPassword(userDto.getPassword());
+//        user.setAbout(userDto.getAbout());
         return user;
     }
 
     private UserDto userToDto(User user){
-        UserDto userDto = new UserDto();
-        userDto.setId(user.getId());
-        userDto.setName(user.getName());
-        userDto.setEmail(user.getEmail());
-        userDto.setPassword(user.getPassword());
-        userDto.setAbout(user.getAbout());
+        UserDto userDto = this.modelMapper.map(user,UserDto.class);
+//        how model mapper works? => search
+//        UserDto userDto = new UserDto();
+//        userDto.setId(user.getId());
+//        userDto.setName(user.getName());
+//        userDto.setEmail(user.getEmail());
+//        userDto.setPassword(user.getPassword());
+//        userDto.setAbout(user.getAbout());
         return userDto;
     }
 
