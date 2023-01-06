@@ -40,12 +40,12 @@ public class BlogAppApisApplication implements CommandLineRunner {
 //			If it is already created then it will not create roles table again because we are using the same id 501, 502
 			Role role = new Role();
 			role.setId(AppConstants.ADMIN_USER);
-			role.setName("ADMIN_USER");
+			role.setName("ROLE_ADMIN");
 
 
 			Role role1 = new Role();
 			role1.setId(AppConstants.NORMAL_USER);
-			role1.setName("NORMAL_USER");
+			role1.setName("ROLE_NORMAL");
 
 			List<Role> roles = List.of(role,role1);
 
