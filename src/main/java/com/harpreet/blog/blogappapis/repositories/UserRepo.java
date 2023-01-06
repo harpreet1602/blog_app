@@ -3,6 +3,8 @@ package com.harpreet.blog.blogappapis.repositories;
 import com.harpreet.blog.blogappapis.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepo extends JpaRepository<User,Integer> {
+import java.util.Optional;
 
+public interface UserRepo extends JpaRepository<User,Integer> {
+    Optional<User> findByEmail(String email);
 }

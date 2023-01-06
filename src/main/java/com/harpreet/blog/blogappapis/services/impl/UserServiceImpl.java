@@ -1,15 +1,20 @@
 package com.harpreet.blog.blogappapis.services.impl;
 
+import com.harpreet.blog.blogappapis.config.AppConstants;
+import com.harpreet.blog.blogappapis.entities.Role;
 import com.harpreet.blog.blogappapis.entities.User;
 import com.harpreet.blog.blogappapis.exceptions.ResourceNotFoundException;
 import com.harpreet.blog.blogappapis.payloads.UserDto;
+import com.harpreet.blog.blogappapis.repositories.RoleRepo;
 import com.harpreet.blog.blogappapis.repositories.UserRepo;
 import com.harpreet.blog.blogappapis.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
@@ -20,6 +25,26 @@ public class UserServiceImpl implements UserService {
 //    As we get the object of implementation class only.
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RoleRepo roleRepo;
+
+    @Override
+    public UserDto registerNewUser(UserDto userDto) {
+        User user = this.modelMapper.map(userDto,User.class);
+        // encoded the password.
+        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+//        roles
+        Role role = this.roleRepo.findById(AppConstants.NORMAL_USER).get();
+
+        user.getRoles().add(role);
+        User newUser = this.userRepo.save(user);
+        return this.modelMapper.map(newUser,UserDto.class);
+    }
+
     @Override
     public UserDto createUser(UserDto userDto) {
         User user = this.dtoToUser(userDto);
