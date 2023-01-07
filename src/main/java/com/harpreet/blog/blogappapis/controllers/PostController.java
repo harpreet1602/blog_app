@@ -1,11 +1,15 @@
 package com.harpreet.blog.blogappapis.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpreet.blog.blogappapis.config.AppConstants;
 import com.harpreet.blog.blogappapis.payloads.ApiResponse;
 import com.harpreet.blog.blogappapis.payloads.PostDto;
 import com.harpreet.blog.blogappapis.payloads.PostResponse;
 import com.harpreet.blog.blogappapis.services.FileService;
 import com.harpreet.blog.blogappapis.services.PostService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -27,6 +31,12 @@ public class PostController {
     private PostService postService;
     @Autowired
     private FileService fileService;
+
+    private Logger logger = LoggerFactory.getLogger(PostController.class);
+
+    @Autowired
+    private ObjectMapper mapper;
+
     @Value("${project.image}")
     private String path;
 
@@ -114,5 +124,34 @@ public class PostController {
         InputStream resource = this.fileService.getResource(path, imageName);
         response.setContentType(MediaType.IMAGE_JPEG_VALUE);
         StreamUtils.copy(resource,response.getOutputStream());
+    }
+//  Json and file together in one API
+
+    @PostMapping("/user/{userId}/category/{categoryId}/posts/image/upload")
+    public ResponseEntity<PostDto> createUploadPost(@RequestParam("file") MultipartFile file,
+                                              @RequestParam("postData") String postData,
+                                              @PathVariable Integer userId,
+                                              @PathVariable Integer categoryId
+    ) throws IOException, JsonProcessingException{
+
+        this.logger.info("Create Post and Upload Image together");
+        this.logger.info("file: {}", file.getOriginalFilename());
+        this.logger.info("postData: {}", postData);
+
+        PostDto postDto = null;
+        postDto = mapper.readValue(postData, PostDto.class);
+//        try {
+//            postDto = mapper.readValue(postData, PostDto.class);
+//        }
+//        catch(JsonProcessingException e){
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Request");
+//        }
+        this.logger.info("postDto: {}", postDto.getTitle());
+
+        PostDto postDto1 = this.postService.createPost(postDto,userId,categoryId);
+        String fileName = this.fileService.uploadImage(path,file);
+        postDto.setImageName(fileName);
+        PostDto updatePost = this.postService.updatePost(postDto,postDto1.getPostId());
+        return new ResponseEntity<PostDto>(updatePost,HttpStatus.OK);
     }
 }
