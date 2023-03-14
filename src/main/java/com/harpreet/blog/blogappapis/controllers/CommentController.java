@@ -1,18 +1,14 @@
 package com.harpreet.blog.blogappapis.controllers;
-
 import com.harpreet.blog.blogappapis.payloads.ApiResponse;
 import com.harpreet.blog.blogappapis.payloads.CommentDto;
 import com.harpreet.blog.blogappapis.services.CommentService;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Set;
-
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class CommentController {
     @Autowired
     private CommentService commentService;

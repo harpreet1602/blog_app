@@ -1,24 +1,18 @@
 package com.harpreet.blog.blogappapis.controllers;
-
 import com.harpreet.blog.blogappapis.payloads.ApiResponse;
 import com.harpreet.blog.blogappapis.payloads.CategoryDto;
-import com.harpreet.blog.blogappapis.payloads.UserDto;
 import com.harpreet.blog.blogappapis.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
-import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.List;
-
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/api/v1/categories")
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
-
 //    create category
     @PostMapping("/")
     public ResponseEntity<CategoryDto> createCategory(@Valid @RequestBody CategoryDto categoryDto){

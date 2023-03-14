@@ -1,10 +1,7 @@
 package com.harpreet.blog.blogappapis.entities;
-
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.*;
-
 @Entity
 @Table(name = "comments")
 @Getter
@@ -13,7 +10,6 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String content;
     @ManyToOne
     private Post post;

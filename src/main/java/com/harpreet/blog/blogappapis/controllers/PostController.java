@@ -1,5 +1,4 @@
 package com.harpreet.blog.blogappapis.controllers;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpreet.blog.blogappapis.config.AppConstants;
@@ -18,28 +17,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class PostController {
     @Autowired
     private PostService postService;
     @Autowired
     private FileService fileService;
-
     private Logger logger = LoggerFactory.getLogger(PostController.class);
-
     @Autowired
     private ObjectMapper mapper;
-
     @Value("${project.image}")
     private String path;
-
 //    create
     @PostMapping("/user/{userId}/category/{categoryId}/posts")
     public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto,
@@ -60,7 +53,6 @@ public class PostController {
         List<PostDto> postDtos = this.postService.getPostsByCategory(categoryId);
         return new ResponseEntity<>(postDtos,HttpStatus.OK);
     }
-
 //    Get all posts
     @GetMapping("/posts")
     public ResponseEntity<PostResponse> getAllPosts(
@@ -72,7 +64,6 @@ public class PostController {
         PostResponse postResponse = this.postService.getAllPost(pageNumber,pageSize,sortBy,sortDir);
         return new ResponseEntity<>(postResponse,HttpStatus.OK);
     }
-
 //    Get Post By post id
     @GetMapping("/posts/{postId}")
     public ResponseEntity<PostDto> getPostById(@PathVariable Integer postId){
@@ -92,7 +83,6 @@ public class PostController {
         this.postService.deletePost(postId);
         return new ResponseEntity<>(new ApiResponse("Post Deleted Successfully",true),HttpStatus.OK);
     }
-
 //    Search
     @GetMapping("/posts/search/{keywords}")
     public ResponseEntity<List<PostDto>> searchPostByTitle(
@@ -101,7 +91,6 @@ public class PostController {
         List<PostDto> postDtos = this.postService.searchPosts(keywords);
         return new ResponseEntity<>(postDtos,HttpStatus.OK);
     }
-
 //    post image upload
     @PostMapping("/post/image/upload/{postId}")
     public ResponseEntity<PostDto> uploadPostImage(
@@ -126,18 +115,15 @@ public class PostController {
         StreamUtils.copy(resource,response.getOutputStream());
     }
 //  Json and file together in one API
-
     @PostMapping("/user/{userId}/category/{categoryId}/posts/image/upload")
     public ResponseEntity<PostDto> createUploadPost(@RequestParam("file") MultipartFile file,
                                               @RequestParam("postData") String postData,
                                               @PathVariable Integer userId,
                                               @PathVariable Integer categoryId
     ) throws IOException, JsonProcessingException{
-
         this.logger.info("Create Post and Upload Image together");
         this.logger.info("file: {}", file.getOriginalFilename());
         this.logger.info("postData: {}", postData);
-
         PostDto postDto = null;
         postDto = mapper.readValue(postData, PostDto.class);
 //        try {
@@ -147,7 +133,6 @@ public class PostController {
 //            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Request");
 //        }
         this.logger.info("postDto: {}", postDto.getTitle());
-
         PostDto postDto1 = this.postService.createPost(postDto,userId,categoryId);
         String fileName = this.fileService.uploadImage(path,file);
         postDto.setImageName(fileName);

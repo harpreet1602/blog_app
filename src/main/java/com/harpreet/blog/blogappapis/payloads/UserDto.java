@@ -1,5 +1,7 @@
 package com.harpreet.blog.blogappapis.payloads;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.harpreet.blog.blogappapis.entities.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,11 +24,20 @@ public class UserDto {
     @Size(min = 4, max=20, message = "Username must be of minimum 4 characters and maximum of 20 characters!")
     private String name;
     @Email(message = "Email address is not valid!")
+    @NotEmpty(message = "Email cannot be empty")
     private String email;
     @NotEmpty
-    @Size(min = 4, max=10, message = "Password must be of minimum of 4 characters and maximum of 20 characters!")
+    @Size(min = 4, max=20, message = "Password must be of minimum of 4 characters and maximum of 20 characters!")
     private String password;
     @NotEmpty
     private String about;
     private Set<RoleDto> roles = new HashSet<>();
+    @JsonIgnore
+    public String getPassword(){
+        return this.password;
+    }
+    @JsonProperty
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

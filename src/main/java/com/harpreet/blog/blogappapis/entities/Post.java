@@ -1,14 +1,11 @@
 package com.harpreet.blog.blogappapis.entities;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
 @Entity
 @Table(name="posts")
 @Getter
@@ -20,7 +17,7 @@ public class Post {
     private Integer postId;
     @Column(name="post_title",length=100,nullable=false)
     private String title;
-    @Column(length = 10000)
+    @Column(length = 1000000)
     private String content;
     private String imageName;
     private Date addedDate;
@@ -29,7 +26,6 @@ public class Post {
     private Category category;
     @ManyToOne
     private User user;
-
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
     private Set<Comment> comments = new HashSet<>();
 }
