@@ -58,8 +58,8 @@ public class UserServiceImpl implements UserService {
 
         user.setName(userDto.getName());
         user.setAbout(userDto.getAbout());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
+//        user.setEmail(userDto.getEmail());
+//        user.setPassword(userDto.getPassword());
 
         User updatedUser =  this.userRepo.save(user);
         UserDto userDto1 = this.userToDto(updatedUser);

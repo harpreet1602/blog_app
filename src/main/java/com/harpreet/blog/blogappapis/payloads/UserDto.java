@@ -26,7 +26,7 @@ public class UserDto {
     @Email(message = "Email address is not valid!")
     @NotEmpty(message = "Email cannot be empty")
     private String email;
-    @NotEmpty
+//    @NotEmpty
     @Size(min = 4, max=20, message = "Password must be of minimum of 4 characters and maximum of 20 characters!")
     private String password;
     @NotEmpty
